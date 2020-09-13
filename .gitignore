@@ -1,0 +1,14 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# VSCODE and Python linter specefic
+.vscode/**
+
+# Env file
+.env
+
+# Postgres data
+postgres_data
