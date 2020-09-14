@@ -10,5 +10,5 @@ __pycache__/
 # Env file
 .env
 
-# Postgres data
-postgres_data
+# Pyrogram
+*.session
