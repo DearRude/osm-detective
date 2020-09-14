@@ -13,6 +13,7 @@ osmcha = "^0.7.0"
 pyrogram = "^1.0.7"
 khayyam = "^3.0.17"
 tgcrypto = "^1.2.1"
+apscheduler = "^3.6.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
