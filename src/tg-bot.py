@@ -9,8 +9,9 @@ def changeset_bot(ch_id: int) -> dict:
         "id": change.id,
         "date": to_teh_time(change.date).strftime('%C'),
         "user": change.user,
+        "user_url": "%20".join(f"https://www.osm.org/user/{change.user}".split()),
         "is_sus": change.is_suspect,
-        "flags": " ،".join(translate_flags(change.suspicion_reasons)),
+        "flags": "، ".join(translate_flags(change.suspicion_reasons)),
         "added": change.create,
         "modified": change.modify,
         "deleted": change.delete,
@@ -44,14 +45,14 @@ def bebin(client, message):
     if ch_info["is_sus"]:
         with open(bot_commands_dir / "is_sus.md", "r") as sus_text:
             response = sus_text.read().format(
-                ch_info["id"], ch_info["date"], ch_info["user"], ch_info["added"],
+                ch_info["id"], ch_info["date"], ch_info["user"], ch_info["user_url"], ch_info["added"],
                 ch_info["modified"], ch_info["deleted"], ch_info["osm_url"],
                 ch_info["osmcha_url"], ch_info["osmviz_url"], ch_info["achavi_url"],
                 ch_info["flags"])
     else:
         with open(bot_commands_dir / "not_sus.md", "r") as sus_text:
             response = sus_text.read().format(
-                ch_info["id"], ch_info["date"], ch_info["user"], ch_info["added"],
+                ch_info["id"], ch_info["date"], ch_info["user"], ch_info["user_url"], ch_info["added"],
                 ch_info["modified"], ch_info["deleted"], ch_info["osm_url"],
                 ch_info["osmcha_url"], ch_info["osmviz_url"], ch_info["achavi_url"])
         print(response)
@@ -60,17 +61,3 @@ def bebin(client, message):
 
 
 app.run()
-
-# key = 90866962
-# print(f"Analyse {key}...")
-# change = osmcha.changeset.Analyse(int(key))
-# change.full_analysis()
-# print(translate_flags(change.suspicion_reasons))
-# print(to_teh_time(change.date))
-
-# changesets = query_changesets(api, iran_bbox, border)
-# for key in changesets.keys():
-#     print(f"Analyse {key}...")
-#     change = osmcha.changeset.Analyse(int(key))
-#     change.full_analysis()
-#     print(translate_flags(change.suspicion_reasons))
