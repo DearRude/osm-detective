@@ -1,0 +1,3 @@
+# OSM Detective
+
+WORK IN PROGRESS
