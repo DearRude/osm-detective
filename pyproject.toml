@@ -11,6 +11,7 @@ matplotlib = "^3.3.1"
 pathlib = "^1.0.1"
 osmcha = "^0.7.0"
 pyrogram = "^1.0.7"
+khayyam = "^3.0.17"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

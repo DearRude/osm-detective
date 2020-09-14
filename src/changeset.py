@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+from khayyam import JalaliDatetime, TehranTimezone
 import json
 from matplotlib import path as geo_path
 import osmapi
@@ -35,3 +37,15 @@ def translate_flags(flag_list):
     for idx, flag in enumerate(flag_list):
         flag_list[idx] = translation.get(flag, flag)
     return flag_list
+
+def to_teh_time(date_time):
+    offset_hour = 4 if JalaliDatetime.now(TehranTimezone()).month <= 6 else 3
+    date_time = date_time + timedelta(hours=offset_hour, minutes=30)
+    return JalaliDatetime(date_time, TehranTimezone())
+
+def query_changesets(api, iran_bbox, border):
+    utc_timezone = timezone(timedelta(0))
+    time_period = datetime.now(utc_timezone) - timedelta(hours=5)
+    changesets = api.ChangesetsGet(**iran_bbox, closed_after=time_period, only_closed=True)
+    filter_changesets(changesets, border)
+    return changesets
