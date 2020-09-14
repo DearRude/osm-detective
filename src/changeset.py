@@ -1,8 +1,10 @@
 import json
-from datetime import datetime, timedelta
 from matplotlib import path as geo_path
 import osmapi
+import osmcha.changeset
 from pathlib import Path
+
+from texts.text_changesets import *
 
 
 def gen_border():
@@ -29,16 +31,7 @@ def filter_changesets(changesets, border):
         if not in_border(info_area, border):
             del changesets[ch_id]
 
-border = gen_border()
-
-iran_bbox = {"min_lon": 43.8574219, "max_lon": 63.6328125,
-             "min_lat": 24.6869524, "max_lat": 40.3800284}
-time_period = datetime.now() - timedelta(hours=5)
-
-
-api = osmapi.OsmApi()
-
-changesets = api.ChangesetsGet(**iran_bbox, closed_after=time_period)
-print(changesets.keys())
-filter_changesets(changesets, border)
-print(changesets.keys())
+def translate_flags(flag_list):
+    for idx, flag in enumerate(flag_list):
+        flag_list[idx] = translation.get(flag, flag)
+    return flag_list
