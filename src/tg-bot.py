@@ -84,6 +84,9 @@ def bebin(client, message):
         print(response)
     message.reply_text(response, parse_mode="md", disable_web_page_preview=True)
 
+@app.on_message(filter.command(commands=["start"]) & filter.private)
+def start_bot(client, message):
+    message.reply_text("سلام!")
 
 
 
