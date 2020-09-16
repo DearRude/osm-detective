@@ -7,7 +7,7 @@ WORKDIR /usr/src/osm-detective
 COPY ./requirements.txt ./requirements.txt
 
 # Install dependency
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Copy Source code
 COPY . .
