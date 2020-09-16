@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "osm_detective"
 version = "0.1.0"
-description = ""
+description = "A simply project to monitor edits in OSM"
 authors = ["Ebrahim <dearrude@tfwno.gf>"]
 
 [tool.poetry.dependencies]
