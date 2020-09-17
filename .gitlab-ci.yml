@@ -1,7 +1,6 @@
 #Following instructions (as of 2020-04-01): https://docs.gitlab.com/ee/ci/docker/using_kaniko.html
 
 include:
-  - template: Dependency-Scanning.gitlab-ci.yml
   - template: Jobs/Code-Quality.gitlab-ci.yml
 
 image: 
