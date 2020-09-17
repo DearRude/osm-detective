@@ -2,7 +2,7 @@
 
 ![alt text](https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png "OSMDetective Logo")
 
-A simple program to monitor suspicious informations in changesets of OpenStreetMap.
+Powered by OSMcha, a simple program to monitor suspicious informations in changesets of OpenStreetMap.
 
 
 ## Installation
