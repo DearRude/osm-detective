@@ -3,36 +3,3 @@ services:
   bot:
     image: registry.gitlab.com/osmiran/osm-detective:latest
     env_file: .env
-
-
-  # main:
-  #   image: registry.gitlab.com/osmiran/osmiran_stats:latest
-  #   volumes:
-  #     - ./assets/:/usr/src/osmiran_stats/assets/
-  #   command:
-  #     "sh -c 'gunicorn --worker-tmp-dir /dev/shm --workers=2 --threads=4 --worker-class=gthread --log-file=- --access-logfile=- -b 0.0.0.0:8080 src.app:app'"
-  #   depends_on:
-  #     - main_schedule
-  #   env_file: .env
-
-
-  # db:
-  #   image: postgres:alpine
-  #   ports:
-  #     - "5434:5432"
-  #   restart: always
-  #   volumes:
-  #     - ./postgres_data/osmiran_stats/psql:/var/lib/postgresql/data
-  #   env_file: .env
-
-
-  # webserver:
-  #   image: nginx:alpine
-  #   volumes:
-  #     - ./services/app.conf:/etc/nginx/templates/default.conf.template
-  #     - ./assets/:/assets/
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   depends_on:
-  #     - main
