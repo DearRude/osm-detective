@@ -60,7 +60,7 @@ def chnl_loop():
             app.send_message(sus_channel, sus_response, parse_mode="md", disable_web_page_preview=True)
 
 
-@app.on_message(filters.command(commands=["bebin", "b"]))
+@app.on_message(filters.command(["bebin", "b"]))
 def bebin(client, message):
     text = message.text.split(" ")[1:]
     if not len(text):
@@ -84,7 +84,7 @@ def bebin(client, message):
         print(response)
     message.reply_text(response, parse_mode="md", disable_web_page_preview=True)
 
-@app.on_message(filter.command(commands=["start"]) & filter.private)
+@app.on_message(filters.command(["start"]) & filters.private)
 def start_bot(client, message):
     message.reply_text("سلام!")
 
