@@ -7,10 +7,11 @@ WORKDIR /usr/src/osm-detective
 COPY ./requirements.txt ./requirements.txt
 
 # Install dependency
-RUN pip3 install -r requirements.txt
+RUN apt-get update && apt-get install -y libcurl4-openssl-dev libssl-dev gcc
+RUN pip install -r requirements.txt
 
 # Copy Source code
 COPY . .
 
 # Run scheduled
-CMD [ "python3", "./main.py" ]
+CMD [ "python3", "./src/tg-bot.py" ]
