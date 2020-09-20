@@ -22,7 +22,7 @@ def changeset_bot(ch_id: int) -> dict:
     enhance_detection(change)
     return {
         "id": change.id,
-        "uid": f"#uid_{change.uid}",
+        "uid": f"{change.uid}",
         "date": to_teh_time(change.date).strftime('%C'),
         "user": change.user,
         "comment": translation.get(change.comment, change.comment),
