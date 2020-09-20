@@ -24,6 +24,7 @@ def changeset_bot(ch_id: int) -> dict:
     enhance_detection(change)
     return {
         "id": change.id,
+        "uid": f"#{change.uid}",
         "date": to_teh_time(change.date).strftime('%C'),
         "user": change.user,
         "comment": change.comment,
@@ -49,7 +50,7 @@ def chnl_loop():
                 ch_info["id"], ch_info["date"], ch_info["user"], ch_info["user_url"],
                 ch_info["added"], ch_info["modified"], ch_info["deleted"],
                 ch_info["osm_url"], ch_info["osmcha_url"], ch_info["osmviz_url"],
-                ch_info["achavi_url"], ch_info["comment"])
+                ch_info["achavi_url"], ch_info["comment"], ch_info["uid"])
         app.send_message(gen_channel, gen_response, parse_mode="md", disable_web_page_preview=True)
         if ch_info["is_sus"]:
             with open(bot_commands_dir / "sus_found.md", "r") as sus_text:
@@ -57,7 +58,7 @@ def chnl_loop():
                     ch_info["id"], ch_info["date"], ch_info["user"], ch_info["user_url"], ch_info["added"],
                     ch_info["modified"], ch_info["deleted"], ch_info["osm_url"],
                     ch_info["osmcha_url"], ch_info["osmviz_url"], ch_info["achavi_url"],
-                    ch_info["flags"], ch_info["comment"])
+                    ch_info["flags"], ch_info["comment"], ch_info["uid"])
             app.send_message(sus_channel, sus_response, parse_mode="md", disable_web_page_preview=True)
 
 
