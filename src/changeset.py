@@ -15,6 +15,7 @@ from texts.text_changesets import *
 def gen_border():
     # Parse GeoJSON
     country = environ["BORDER"]
+    print(f"Border {country} detected")
     with open(Path.cwd()/"assets"/"borders"/f"{country.lower()}.geojson") as f:
         lim_border = json.load(f)
     # Shove it into matplotlib
@@ -22,6 +23,8 @@ def gen_border():
     point_list = np.array(border_coords)
     iran_bbox = {"min_lon": point_list[:, 0].min(), "max_lon": point_list[:, 0].max(),
                  "min_lat": point_list[:, 1].min(), "max_lat": point_list[:, 1].max()}
+
+    print("Borders path generated")
     return geo_path.Path(border_coords, closed=True), iran_bbox
 
 def in_border(area_coords, border) -> bool:
@@ -55,6 +58,7 @@ def query_changesets(api, iran_bbox, border, mins=10) -> dict:
     time_period = datetime.now(utc_timezone) - timedelta(minutes=mins)
     changesets = api.ChangesetsGet(**iran_bbox, closed_after=time_period, only_closed=True)
     filter_changesets(changesets, border)
+    print(f"{len(changesets)} changsets found")
     return changesets
 
 def enhance_detection(change):

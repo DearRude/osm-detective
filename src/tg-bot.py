@@ -22,11 +22,11 @@ def changeset_bot(ch_id: int) -> dict:
     enhance_detection(change)
     return {
         "id": change.id,
-        "uid": f"#{change.uid}",
+        "uid": f"#uid_{change.uid}",
         "date": to_teh_time(change.date).strftime('%C'),
         "user": change.user,
-        "comment": change.comment,
-        "source": change.source,
+        "comment": translation.get(change.comment, change.comment),
+        "source": translation.get(change.source, change.source),
         "user_url": "%20".join(f"https://www.osm.org/user/{change.user}".split()),
         "is_sus": change.is_suspect,
         "flags": "، ".join(translate_flags(change.suspicion_reasons)),
@@ -95,5 +95,10 @@ interval = 10
 scheduler = BackgroundScheduler()
 scheduler.add_job(chnl_loop, "interval", minutes=interval)
 
+print("Scheduler set.")
 scheduler.start()
+print("Pyrogram starting...")
 app.run()
+
+# with app:
+#     chnl_loop()

@@ -19,5 +19,6 @@ translation = {
     "Generic name": u"اسامی عمومی انتخاب شده",
     "Unsquare corners": u"گوشه غیر مربعی",
     "User has multiple blocks": u"این کاربر چندین بار قبلا مسدود‌ شده‌است",
-    "New mapper": u"کاربر جدید"
+    "New mapper": u"کاربر جدید",
+    "Not reported": u"گزارش نشده‌است"
 }
