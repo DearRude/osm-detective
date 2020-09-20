@@ -2,20 +2,27 @@ from datetime import datetime, timedelta, timezone
 from khayyam import JalaliDatetime, TehranTimezone
 import json
 from matplotlib import path as geo_path
+import numpy as np
 import osmapi
 import osmcha.changeset
 from pathlib import Path
+from os import environ
+
 
 from texts.text_changesets import *
 
 
 def gen_border():
     # Parse GeoJSON
-    with open(Path.cwd()/"assets"/"borders"/"ir-sim.geojson") as f:
+    country = environ["BORDER"]
+    with open(Path.cwd()/"assets"/"borders"/f"{country.lower()}.geojson") as f:
         lim_border = json.load(f)
     # Shove it into matplotlib
     border_coords = lim_border["features"][0]["geometry"]["coordinates"]
-    return geo_path.Path(border_coords, closed=True)
+    point_list = np.array(border_coords)
+    iran_bbox = {"min_lon": point_list[:, 0].min(), "max_lon": point_list[:, 0].max(),
+                 "min_lat": point_list[:, 1].min(), "max_lat": point_list[:, 1].max()}
+    return geo_path.Path(border_coords, closed=True), iran_bbox
 
 def in_border(area_coords, border) -> bool:
     nodes = [[area_coords["min_lon"], area_coords["min_lat"]],
