@@ -49,3 +49,9 @@ def query_changesets(api, iran_bbox, border, mins=10) -> dict:
     changesets = api.ChangesetsGet(**iran_bbox, closed_after=time_period, only_closed=True)
     filter_changesets(changesets, border)
     return changesets
+
+def enhance_detection(change):
+    low_imprt = ["New mapper", "User has multiple blocks"]
+    in_change = [flag in change.suspicion_reasons for flag in low_imprt]
+    if len(change.suspicion_reasons) == 1 and (True in in_change):
+        change.is_suspect = False

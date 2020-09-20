@@ -21,6 +21,7 @@ gen_channel, sus_channel= environ["GEN_CHANNEL"], environ["SUS_CHANNEL"]
 def changeset_bot(ch_id: int) -> dict:
     change = osmcha.changeset.Analyse(ch_id)
     change.full_analysis()
+    enhance_detection(change)
     return {
         "id": change.id,
         "date": to_teh_time(change.date).strftime('%C'),
