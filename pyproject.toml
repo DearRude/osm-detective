@@ -18,6 +18,9 @@ numpy = "^1.19.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+autopep8 = "^1.5.4"
+pylint = "^2.6.0"
+rope = "^0.17.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
