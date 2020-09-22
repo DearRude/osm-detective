@@ -107,7 +107,7 @@ def start_bot(message):
     message.reply_text("سلام!")
 
 
-interval = cha.environ["INTERVAL"]
+interval = int(cha.environ["INTERVAL"])
 scheduler = BackgroundScheduler()
 scheduler.add_job(chnl_loop, "interval", minutes=interval)
 
