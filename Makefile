@@ -27,3 +27,6 @@ test: install
 	@printf "Is TESTMODE on? %s \n" "$(TESTMODE)"
 	@echo --- RUN TESTING ---
 	@poetry run pytest $$TESTARG
+
+depand:
+	@poetry export -f requirements.txt > requirements.txt
