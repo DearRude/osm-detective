@@ -1,21 +1,21 @@
 """Some modules to work with changesets"""
 import json
 from datetime import datetime, timedelta, timezone
-from os import environ
 from pathlib import Path
 
 import numpy as np
 from khayyam import JalaliDatetime, TehranTimezone
 from matplotlib import path as geo_path
 
-from texts.text_changesets import translation
+from src.texts.text_changesets import translation
+import src.conf as conf
 
 
 def gen_border():
     """Generates border path and bbox out of geojson file"""
 
     # Parse GeoJSON
-    country = environ["BORDER"]
+    country = conf.country
     print(f"Border {country} detected")
     with open(Path.cwd()/"assets"/"borders"/f"{country.lower()}.geojson") as bor:
         lim_border = json.load(bor)

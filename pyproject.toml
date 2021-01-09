@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "osm_detective"
+name = "osm-detective"
 version = "0.1.0"
 description = "A simply project to monitor edits in OSM"
 authors = ["Ebrahim <dearrude@tfwno.gf>"]
