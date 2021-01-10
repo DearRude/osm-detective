@@ -10,7 +10,8 @@ COPY ./requirements.txt ./requirements.txt
 LABEL maintainer = "dearrude@tfwno.gf"
 
 # Install dependency
-RUN apt-get update && apt-get install -y libcurl4-openssl-dev libssl-dev gcc
+RUN python -m pip install --upgrade pip
+RUN apt-get update && apt-get install -y libcurl4-openssl-dev libssl-dev libgeos-dev gcc
 RUN pip install -r requirements.txt
 
 # Copy Source code

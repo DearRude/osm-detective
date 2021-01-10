@@ -71,8 +71,11 @@ def query_changesets(api, iran_bbox, border, mins=10) -> dict:
 
     utc_timezone = timezone(timedelta(0))
     time_period = datetime.now(utc_timezone) - timedelta(minutes=mins)
-    changesets = api.ChangesetsGet(
-        **iran_bbox, closed_after=time_period, only_closed=True)
+    try:
+        changesets = api.ChangesetsGet(
+            **iran_bbox, closed_after=time_period, only_closed=True)
+    except Exception:
+        return []
     filter_changesets(changesets, border)
     print(f"{len(changesets)} changsets found")
     return changesets

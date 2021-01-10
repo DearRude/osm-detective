@@ -29,7 +29,8 @@ api = osmapi.OsmApi()
 def chnl_loop():
     """A schedule loop which posts changesets to channels"""
 
-    ch_sets = cha.query_changesets(api, iran_bbox, border, interval)
+    print("Query for changesets...")
+    ch_sets = cha.query_changesets(api, iran_bbox, border, conf.interval)
     for ch_st in ch_sets:
         ch_info = pa.changeset_parse(ch_st)
         app.send_message(conf.gen_channel, pa.format_nor(ch_info),
