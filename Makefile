@@ -24,7 +24,6 @@ run: install
 	@poetry run python3 src/main.py
 
 test: install
-	@printf "Is TESTMODE on? %s \n" "$(TESTMODE)"
 	@echo --- RUN TESTING ---
 	@poetry run pytest $$TESTARG
 

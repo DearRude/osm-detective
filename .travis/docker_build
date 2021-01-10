@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
+echo $CR_PAT | docker login ghcr.io -u $DOCKERHUB_USER --password-stdin
+docker build . -t osm-detective
+docker images
+
+docker tag osm-detective $DOCKERHUB_USER/osm-detective:$TAG
+docker push $DOCKERHUB_USER/osm-detective:$TAG
+docker tag osm-detective ghcr.io/$DOCKERHUB_USER/osm-detective:$TAG
+docker push ghcr.io/$DOCKERHUB_USER/osm-detective:$TAG

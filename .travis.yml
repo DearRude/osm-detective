@@ -1,0 +1,40 @@
+os: linux
+
+language: python
+python: "3.8"
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+      - libcurl4-openssl-dev
+      - libssl-dev
+      - gcc
+      - make
+
+install:
+  - cp .env.sample .env
+
+stages:
+  - name: test
+    if: type IN (push, pull_request)
+  - name: build
+    if: branch = master
+  - name: build_tag
+    if: (tag IS present) AND (branch = master)
+
+jobs:
+  include:
+    - stage: test
+      script: make test
+
+    - stage: build
+      env: TAG=latest
+      script: bash .travis/docker_build
+
+    - stage: build_tag
+      env: TAG=$TRAVIS_TAG
+      script: bash .travis/docker_build
