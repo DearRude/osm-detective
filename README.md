@@ -1,5 +1,7 @@
 # OSM Detective
 
+[![Build Status](https://travis-ci.com/DearRude/osm-detective.svg?branch=master)](https://travis-ci.com/DearRude/osm-detective)
+
 ![alt text](https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png "OSMDetective Logo")
 
 Powered by OSMcha, a simple program to monitor suspicious informations in changesets of OpenStreetMap.
