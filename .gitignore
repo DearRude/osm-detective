@@ -7,8 +7,8 @@ __pycache__/
 # VSCODE and Python linter specefic
 .vscode/**
 
-# Env file
-.env
+# conf file
+conf.toml
 
 # Pyrogram
 *.session

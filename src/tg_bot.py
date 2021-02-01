@@ -10,8 +10,6 @@ import changeset as cha
 import src.parse as pa
 import src.conf as conf
 
-proxy = {"hostname": conf.proxy_host,
-         "port": conf.proxy_port}
 
 app = Client(
     "detective_bot",
@@ -19,8 +17,9 @@ app = Client(
     bot_token=conf.bot_token,
 )
 
-if proxy["hostname"] and proxy["port"]:
-    app.proxy = proxy
+if conf.proxy_needed:
+    app.proxy = {"hostname": conf.proxy_host,
+                 "port": conf.proxy_port}
 
 
 border, iran_bbox = cha.gen_border()
@@ -41,13 +40,13 @@ def chnl_loop():
         sleep(3) # Avoid telegram api limit
 
 
-@app.on_message(filters.command(["bebin", "b"]))
+@app.on_message(filters.command(["check", "c"]))
 def bebin(client, message):
     """Query whether a changeset is sus or not; Bot command"""
 
     text = message.text.split(" ")[1:]
     if len(text) == 0:
-        message.reply_text("چیو ببینم؟")
+        message.reply_text("Check what?")
         return
 
     ch_info = pa.changeset_parse(int(text[0]))
@@ -61,5 +60,5 @@ def bebin(client, message):
 def start_bot(client, message):
     """Bot start reply; Bot command"""
 
-    message.reply_text("سلام!")
+    message.reply_text("Hello!")
 

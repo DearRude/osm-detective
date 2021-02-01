@@ -1,31 +1,35 @@
-import requests as req
-from lxml import etree
+"""Declaring OSM user and changeset types as
+well as analysis methods on them"""
 
 from datetime import datetime
 
-from src.consts import *
+import requests as req
+from lxml import etree
+
+from src import conf
 
 reqs = req.Session()
+reqs.headers.update({"User-Agent": "osm-detective"})
 
+
+def request(url: str, content_type: str = "xml"):
+    try:
+        reque = reqs.get(url)
+        reque.raise_for_status()
+        if content_type == "xml":
+            return etree.XML(reque.content)
+        elif content_type == "json":
+            return reque.json()
+    except req.exceptions.HTTPError as e:
+        print(e.response.text)
 class User:
+    """OSM user class to be used in analysis"""
     def __init__(self, user_id):
         self.id = user_id
-        self.__xml = self.__request(OSM_USERS_API, "xml")
-        self.__json = self.__request(MAPBOX_USERS_API, "json")
+        self.__xml = request(conf.osm_users_api.format(user_id=user_id))
         self.__osm_api()
+        self.__json = request(conf.mapbox_users_api.format(user_id=user_id), "json")
         self.__mapbox_api()
-
-    def __request(self, link: str, type: str):
-        url = link.format(user_id=self.id)
-        try:
-            request = reqs.get(url)
-            request.raise_for_status()
-            if type == "xml":
-                return etree.XML(request.content)
-            elif type == "json":
-                return request.json()
-        except req.exceptions.HTTPError as e:
-            print(e.response.text)
 
     def __osm_api(self):
         self.display_name = self.__xml.xpath("user/@display_name")[0]
@@ -40,26 +44,19 @@ class User:
         self.first_edit = datetime.strptime(
             self.__json["first_edit"],
             "%Y-%m-%dT%H:%M:%S.%fZ")
-        self.mapping_days = self.__json["extra"]["mapping_days"]
-        self.ch_discussion = self.__json["extra"]["changesets_with_discussions"]
+        self.mapping_days = int(self.__json["extra"]["mapping_days"])
+        self.ch_discussion = int(self.__json["extra"]["changesets_with_discussions"])
 
 class Changeset:
-    def __init__(self, id: int):
-        self.id = id
-        self.__meta = self.__request(OSM_CH_API)
-        self.raw = self.__request(OSM_CHRAW_API)
+    """OSM changeset class to be used in analysis"""
+    def __init__(self, ch_id: int):
+        self.id = ch_id
+        self.__meta = request(conf.osm_changeset_api.format(ch_id=ch_id))
+        self.raw = request(conf.osm_changeset_raw_api.format(ch_id=ch_id))
         self.__extract_meta()
         self.user = User(self.uid)
         self.__extract_raw()
-
-    def __request(self, link: str):
-        url = link.format(ch_id=self.id)
-        try:
-            request = reqs.get(url)
-            request.raise_for_status()
-            return etree.XML(request.content)
-        except req.exceptions.HTTPError as e:
-            print(e.response.text)
+        self.__extract_location()
 
     def __extract_meta(self):
         self.uid = int(self.__meta.xpath("changeset/@uid")[0])
@@ -95,13 +92,22 @@ class Changeset:
         self.count_building = [r.xpath(f"count({action}/*/tag[@k='building']/..)")
             for action in actions]
 
+    def __extract_location(self):
+        lat, lon = (self.bbox[0]+self.bbox[2])/2, (self.bbox[1]+self.bbox[3])/2
+        nomi = request(conf.nominatim_api.format(
+            lat=lat, lon=lon), "json")["address"]
+        self.loc = " - ".join(
+            [nomi.get("country", " "), nomi.get("state", " "), nomi.get("county", " ")])
+
 class Analyse:
     def __init__(self, changeset_id):
         self.ch = Changeset(changeset_id)
         self.flags = {} # Flags assigning their grade level
         self.gr = 0  # Importance grade
-    
+        self.do_analysis()
+
     def do_analysis(self):
+        """ Do full analysis with defined constants"""
         self.__new_user(min_chset=10, chset_gr=2,
             min_expri_day=3, expri_gr=0.5,
             min_map_days=10, map_days_gr=0.5)
@@ -110,14 +116,12 @@ class Analyse:
             blocks_gr=1, blocks_step_gr=0.5)
         self.__big_area(max_deg_area=10, area_gr=2)
         self.__id_warnings(max_warnings=1, war_gr=1)
-        COMMON_EDITORS = ["iD", "JOSM", "Potlatch",
-                          "StreetComplete", "Vespucci"]
-        self.__editor(commons=COMMON_EDITORS,
+        self.__editor(commons=conf.common_editors,
             no_editor_gr=3, uncommon_editor_gr=3)
-        self.__comment(sus_words=SUS_WORDS_COMMENT,
+        self.__comment(sus_words=conf.comment_sus_words,
             no_comment_gr=1.5, sus_word_gr=3)
-        self.__source(sus_words=SUS_WORDS_SOURCE,
-            no_source_gr=1.5, sus_word_gr=3)
+        self.__source(sus_words=conf.source_sus_words,
+            no_source_gr=0.75, sus_word_gr=3)
         self.__review_request(review_gr=3)
         self.__mass_deletion(max_del_per=0.8, max_del=40,
             percent_gr=3, top_thresh=150, top_thresh_gr=4,
@@ -125,6 +129,10 @@ class Analyse:
         self.__mass_modification(max_mod=150, max_mod_gr=4)
         self.__mass_creation(max_cre=200, max_cre_gr=3,
             max_ent=50, max_ent_gr=1)
+        self.__important_ids(ids=conf.important_ids, gr=5)
+        self.__important_names(names=conf.important_names, gr=5)
+        self.__important_tags(tags=conf.important_tags, gr=5)
+        self.__versioned_entities(max_version=20, gr=2)
 
     def __new_user(self, min_chset: int, chset_gr: float,
         min_expri_day: int, expri_gr: float,
@@ -134,15 +142,15 @@ class Analyse:
         """
         if self.ch.user.chset_count < min_chset:
             self.gr += chset_gr
-            self.flag["changeset_count"] = self.ch.user.chset_count
+            self.flags["changeset_count"] = self.ch.user.chset_count
         time_exprience = datetime.now() - self.ch.user.created_at
         if time_exprience.days < min_expri_day:
             self.gr += expri_gr
-            self.flag["new_account"] = time_exprience.days
+            self.flags["new_account"] = time_exprience.days
         map_days = self.ch.user.mapping_days
         if map_days < min_map_days:
             self.gr += map_days_gr
-            self.flag["mapping_days"] = map_days
+            self.flags["mapping_days"] = map_days
 
     def __disputed_user(self, max_dis: int, dispute_gr: float,
         dispute_step_gr: float, max_blocks: int,
@@ -154,13 +162,13 @@ class Analyse:
         dis = self.ch.user.ch_discussion
         if dis >= max_dis:
             self.gr += dispute_gr
-            self.flag["disputed_ch"] = dis
+            self.flags["disputed_ch"] = dis
         if dis > max_dis:
             self.gr += (dis * dispute_step_gr)
         bl = self.ch.user.blocks
         if bl >= max_blocks:
             self.gr += blocks_gr
-            self.flag["user_block"] = bl
+            self.flags["user_block"] = bl
         if bl > max_blocks:
             self.gr += (bl-1) * blocks_step_gr
 
@@ -172,16 +180,18 @@ class Analyse:
         lon = self.ch.bbox[3] - self.ch.bbox[1]
         if (lat * lon) >= max_deg_area:
             self.gr += area_gr
-            self.flag["big_area"] = "yes"
+            self.flags["big_area"] = "yes"
 
     def __id_warnings(self, max_warnings: int, war_gr: float):
         """Given parameters, counts iD warning types and
         their occurrence.
         """
-        wars = {k: v for k, v in self.ch.tags if k.startswith('warnings')}
-        if len(wars.keys) >= max_warnings:
-            self.gr += 1 + sum(wars.values)*war_gr
-            [self.flags[k[9:]] = v for k, v in wars]
+        wars = {k: v for k, v in self.ch.tags.items() if k.startswith('warnings')}
+        grades = [int(val) for val in wars.values()]
+        if len(wars.keys()) >= max_warnings:
+            self.gr += 1 + sum(grades)*war_gr
+            for k, v in wars.items():
+                self.flags[k[9:]] = v
 
     def __editor(self, commons: list,
         no_editor_gr: float, uncommon_editor_gr: float):
@@ -220,7 +230,7 @@ class Analyse:
             self.gr += no_source_gr
             self.flags["no_source"] = "yes"
             return
-        for sus_word in SUS_WORDS_SOURCE:
+        for sus_word in sus_words:
             if sus_word in self.ch.tags["source"]:
                 self.gr += sus_word_gr
                 self.flags["sus_word_source"] = "yes"
@@ -251,7 +261,7 @@ class Analyse:
                     self.ch.count_rels[2]]
         for ent_del in entities:
             if ent_del > max_ent:
-                self.gr += max_ent_gr + (ent_del - max_ent // max_ent)
+                self.gr += max_ent_gr + ((ent_del - max_ent) // max_ent)
                 self.flags["entity_mass_deletion"] = sum(entities)
 
     def __mass_modification(self, max_mod: int, max_mod_gr: float):
@@ -260,7 +270,7 @@ class Analyse:
         """
         all_mod = self.ch.count_allchange[1]
         if all_mod > max_mod:
-            self.gr += max_mod_gr + (all_mod - max_mod_gr // max_mod_gr)
+            self.gr += max_mod_gr + ((all_mod - max_mod_gr) // max_mod_gr)
             self.flags["mass_modification"] = all_mod
 
     def __mass_creation(self, max_cre: int, max_cre_gr: float,
@@ -270,10 +280,44 @@ class Analyse:
         """
         all_cre = self.ch.count_allchange[0]
         if all_cre > max_cre:
-            self.gr += max_cre_gr + (all_cre - max_cre // max_cre)
+            self.gr += max_cre_gr + ((all_cre - max_cre) // max_cre)
             self.flags["mass_creation"] = all_cre
         buildings = self.ch.count_building[0]
         if buildings > max_ent:
-            self.gre += max_cre_gr
+            self.gr += max_cre_gr
             self.flags["building_mass_creation"]
-    #TODO: Checks entities by their name, tag and id
+
+    def __important_ids(self, ids: list, gr: float):
+        """Given list of important ids of osm entities,
+        checks if they are preset in changeset or not """
+        for ent_id in ids:
+            count_ids = self.ch.raw.xpath(f"count(//*[@id={ent_id}])")
+            if count_ids >= 1:
+                self.gr += gr
+                self.flags["important_id"] = ent_id
+
+    def __important_names(self, names: list, gr: float):
+        """Given list of important names of osm entities,
+        checks if they are preset in changeset or not """
+        for ent_name in names:
+            count_ids = self.ch.raw.xpath(f'count(//tag[@k="name"][contains(@v, "{ent_name}")])')
+            if count_ids >= 1:
+                self.gr += gr
+                self.flags["important_name"] = ent_name
+
+    def __important_tags(self, tags: dict, gr: float):
+        """Given list of important tags of osm entities,
+        checks if they are preset in changeset or not """
+        for k, v in tags.items():
+            count_ids = self.ch.raw.xpath(f'count(//tag[@k="{k}"][@v="{v}"])')
+            if count_ids >= 1:
+                self.gr += gr
+                self.flags["important_tag"] = f"{k}={v}"
+
+    def __versioned_entities(self, max_version: int, gr: float):
+        """Given the max number of verisons, checks if
+        someone has to do anything with them"""
+        count = self.ch.raw.xpath(f"count(//*[@version > {max_version}])")
+        if count > 0:
+            self.gr += (gr * count)
+            self.flags["versioned_entity"] = count

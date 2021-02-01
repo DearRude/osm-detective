@@ -1,0 +1,48 @@
+[pyrogram]
+api_id = 10298123
+api_hash = "s0meg00dha5h"
+bot_token = "1023108:s0meg00dha5hs0meg00dha5hs"
+telegram_gen_channel = "@testosm"
+telegram_sus_channel = "@testosm"
+
+[app]
+fetch_intervals = 200 # in minutes
+border = "iran"
+
+[validator]
+common_editors = [
+    "iD",
+    "JOSM",
+    "Potlatch",
+    "Vespucci",
+    "StreetComplete"
+]
+comment_sus_words = [
+    "wipe",
+    "delete all"
+]
+source_sus_words = [
+    "Google",
+    "google maps"
+]
+important_ids = [
+    8378076428
+]
+important_tags = [
+    "admin_level=2"
+]
+important_names = [
+    "دهق"
+]
+
+## Optionals
+[pyrogram.proxy] # SOCKS5
+host = "127.0.0.1"
+port = 1080
+
+# [api]
+# osm_users_api = ""
+# mapbox_users_api = ""
+# osm_changeset_api = ""
+# osm_changeset_raw_api = ""
+# nominatim_api = ""
