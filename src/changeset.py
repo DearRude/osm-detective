@@ -7,9 +7,9 @@ import numpy as np
 from khayyam import JalaliDatetime, TehranTimezone
 from matplotlib import path as geo_path
 
-from src.texts.text_changesets import translation
 import src.conf as conf
 from src.analyse import Analyse
+from src.texts.flags import langs
 
 
 def gen_border():
@@ -51,12 +51,18 @@ def filter_changesets(changesets, border):
             del changesets[ch_id]
 
 
-def translate_flags(flag_list) -> list:
+def translate_flags(flags: dict) -> list:
     """Translates flags according to translation dict
     """
-    for idx, flag in enumerate(flag_list):
-        flag_list[idx] = translation.get(flag, flag)
-    return flag_list
+    source = langs[conf.language]
+    dest = []
+    for flag, count in flags.items():
+        if ":" in flag:
+            key, val = flag.split(":")
+            dest.append(source[key].format(v=count, n=val))
+        else:
+            dest.append(source[flag].format(v=count))
+    return dest
 
 
 def to_jalali(date_time):
@@ -69,15 +75,15 @@ def to_jalali(date_time):
 
 def changeset_parse(ana: Analyse) -> str:
     """Gathers latest changests and exports info about them"""
+    parsed_date = ana.ch.closed_at.strftime('%c')
+    if conf.language == "fa":
+        jal_date = to_jalali(ana.ch.closed_at)
+        parsed_date = jal_date.strftime('%C')
     with open(Path.cwd() / "assets" / "bot_commands" / f"{conf.language}.md", "r") as nor_text:
-        parsed_date = ana.ch.closed_at.strftime('%c')
-        if conf.language == "fa":
-            jal_date = to_jalali(ana.ch.closed_at)
-            parsed_date = jal_date.strftime('%C')
         return nor_text.read().format(
             ch_id=ana.ch.id,
             grade=ana.gr,
-            flags="\n".join([f"- {flag}" for flag in ana.flags]),
+            flags="\n".join([f"- {flag}" for flag in translate_flags(ana.flags)]),
             date=parsed_date,
             location=ana.ch.loc,
             user_id=ana.ch.user.id,

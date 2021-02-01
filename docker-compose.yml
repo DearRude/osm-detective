@@ -1,5 +1,0 @@
-version: '3.7'
-services:
-  bot:
-    image: registry.gitlab.com/osmiran/osm-detective:latest
-    env_file: .env

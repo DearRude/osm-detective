@@ -1,7 +1,7 @@
 FROM python:3.8-slim-buster
 
 # Select workdir
-WORKDIR /usr/src/osm-detective
+WORKDIR /usr/osm-detective
 
 # Copy Source code
 COPY . .

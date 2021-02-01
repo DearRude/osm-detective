@@ -125,8 +125,8 @@ class Analyse:
 
     def __new_user(self, min_chset: int, chset_gr: float,
         min_expri_day: int, expri_gr: float):
-        """Given parameters, checks user total changesets,
-        user account age and user mapping days
+        """Given parameters, checks user total changesets
+        and user account age
         """
         if self.ch.user.chset_count < min_chset:
             self.gr += chset_gr
@@ -181,7 +181,7 @@ class Analyse:
         editor = self.ch.tags["created_by"]
         if not any([editor.startswith(nor) for nor in commons]):
             self.gr += uncommon_editor_gr
-            self.flags["uncommon_editor"] = "yes"
+            self.flags["uncommon_editor"] = editor
 
     def __comment(self, sus_words: list,
         no_comment_gr: float, sus_word_gr: float):
@@ -261,7 +261,7 @@ class Analyse:
         buildings = self.ch.count_building[0]
         if buildings > max_ent:
             self.gr += max_cre_gr
-            self.flags["building_mass_creation"]
+            self.flags["building_mass_creation"] = buildings
 
     def __important_ids(self, ids: list, gr: float):
         """Given list of important ids of osm entities,

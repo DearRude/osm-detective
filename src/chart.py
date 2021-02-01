@@ -69,8 +69,8 @@ def gen_changestat_png(ch: Changeset):
     changes = np.array([ch.count_nodes, ch.count_ref_nodes,
         ch.count_ways, ch.count_rels, ch.count_highway, ch.count_building])
     fig, ax = plt.subplots()
-    im = heatmap(changes.transpose(), actions, enetities, ax=ax,
-                    cmap="YlGn")
+    im = heatmap(changes.astype(int).transpose(), actions,
+        enetities, ax=ax, cmap="YlGn")
     annotate_heatmap(im)
     fig.tight_layout()
     ax.set_title(f"Changes of changeset {ch.id}:")
