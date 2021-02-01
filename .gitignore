@@ -10,5 +10,8 @@ __pycache__/
 # conf file
 conf.toml
 
+# Temp files
+temp.png
+
 # Pyrogram
 *.session

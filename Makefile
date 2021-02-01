@@ -5,7 +5,6 @@
 PYTHONPATH = $(PWD)
 SHELL=/bin/bash
 pyver = "3.8.0"
-include .env
 
 # Targets
 activate: install

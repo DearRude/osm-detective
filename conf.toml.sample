@@ -42,7 +42,6 @@ port = 1080
 
 # [api]
 # osm_users_api = ""
-# mapbox_users_api = ""
 # osm_changeset_api = ""
 # osm_changeset_raw_api = ""
 # nominatim_api = ""

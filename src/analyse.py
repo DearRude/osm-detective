@@ -28,8 +28,6 @@ class User:
         self.id = user_id
         self.__xml = request(conf.osm_users_api.format(user_id=user_id))
         self.__osm_api()
-        self.__json = request(conf.mapbox_users_api.format(user_id=user_id), "json")
-        self.__mapbox_api()
 
     def __osm_api(self):
         self.display_name = self.__xml.xpath("user/@display_name")[0]
@@ -39,13 +37,6 @@ class User:
         self.chset_count = int(self.__xml.xpath("user/changesets/@count")[0])
         self.trace_count = int(self.__xml.xpath("user/traces/@count")[0])
         self.blocks = int(self.__xml.xpath("user/blocks/received/@count")[0])
-
-    def __mapbox_api(self):
-        self.first_edit = datetime.strptime(
-            self.__json["first_edit"],
-            "%Y-%m-%dT%H:%M:%S.%fZ")
-        self.mapping_days = int(self.__json["extra"]["mapping_days"])
-        self.ch_discussion = int(self.__json["extra"]["changesets_with_discussions"])
 
 class Changeset:
     """OSM changeset class to be used in analysis"""
@@ -109,10 +100,8 @@ class Analyse:
     def do_analysis(self):
         """ Do full analysis with defined constants"""
         self.__new_user(min_chset=10, chset_gr=2,
-            min_expri_day=3, expri_gr=0.5,
-            min_map_days=10, map_days_gr=0.5)
-        self.__disputed_user(max_dis=10, dispute_gr=1,
-            dispute_step_gr=0.1, max_blocks=1,
+            min_expri_day=3, expri_gr=0.5)
+        self.__disputed_user(max_blocks=1,
             blocks_gr=1, blocks_step_gr=0.5)
         self.__big_area(max_deg_area=10, area_gr=2)
         self.__id_warnings(max_warnings=1, war_gr=1)
@@ -135,8 +124,7 @@ class Analyse:
         self.__versioned_entities(max_version=20, gr=2)
 
     def __new_user(self, min_chset: int, chset_gr: float,
-        min_expri_day: int, expri_gr: float,
-        min_map_days: int, map_days_gr: float):
+        min_expri_day: int, expri_gr: float):
         """Given parameters, checks user total changesets,
         user account age and user mapping days
         """
@@ -147,24 +135,12 @@ class Analyse:
         if time_exprience.days < min_expri_day:
             self.gr += expri_gr
             self.flags["new_account"] = time_exprience.days
-        map_days = self.ch.user.mapping_days
-        if map_days < min_map_days:
-            self.gr += map_days_gr
-            self.flags["mapping_days"] = map_days
 
-    def __disputed_user(self, max_dis: int, dispute_gr: float,
-        dispute_step_gr: float, max_blocks: int,
+    def __disputed_user(self, max_blocks: int,
         blocks_gr: float, blocks_step_gr: float):
-        """Given parameters, calculates number of changesets in
-        which user has comments on and number of blocks user had been
+        """Given parameters, calculates number of blocks user had been
         received.
         """
-        dis = self.ch.user.ch_discussion
-        if dis >= max_dis:
-            self.gr += dispute_gr
-            self.flags["disputed_ch"] = dis
-        if dis > max_dis:
-            self.gr += (dis * dispute_step_gr)
         bl = self.ch.user.blocks
         if bl >= max_blocks:
             self.gr += blocks_gr

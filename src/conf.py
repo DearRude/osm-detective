@@ -6,6 +6,7 @@ with open("conf.toml", "r") as f:
 ## App
 country = confs["app"]["border"]
 interval = confs["app"]["fetch_intervals"]
+language = confs["app"]["language"]
 
 ## Pyrogram
 api_id = confs["pyrogram"]["api_id"]
@@ -32,14 +33,12 @@ important_names = confs["validator"]["important_names"]
 
 ## APIs
 osm_users_api = 'https://www.openstreetmap.org/api/0.6/user/{user_id}'
-mapbox_users_api = 'https://osm-comments-api.mapbox.com/api/v1/users/id/{user_id}?extra=true'
 osm_changeset_api = "https://www.openstreetmap.org/api/0.6/changeset/{ch_id}"
 osm_changeset_raw_api = "https://www.openstreetmap.org/api/0.6/changeset/{ch_id}/download"
 nominatim_api = "https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
 
 if confs.get("api"):
     osm_users_api = confs["api"].get(osm_users_api, osm_users_api)
-    mapbox_users_api = confs["api"].get(mapbox_users_api, mapbox_users_api)
     osm_changeset_api = confs["api"].get(osm_changeset_api, osm_changeset_api)
     osm_changeset_raw_api = confs["api"].get(
         osm_changeset_raw_api, osm_changeset_raw_api)

@@ -11,8 +11,6 @@ LABEL maintainer = "dearrude@tfwno.gf"
 
 # Install dependency
 RUN pip install poetry
-RUN apt-get update
-RUN apt-get install -y libcurl4-openssl-dev libssl-dev gcc
 RUN poetry install --no-dev
 
 # Run scheduled

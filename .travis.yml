@@ -10,13 +10,10 @@ addons:
   apt:
     packages:
       - docker-ce
-      - libcurl4-openssl-dev
-      - libssl-dev
-      - gcc
       - make
 
 install:
-  - cp .env.sample .env
+  - cp conf.toml.sample conf.toml
 
 stages:
   - name: test

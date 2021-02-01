@@ -2,13 +2,13 @@
 
 from pyrogram import Client, filters
 import osmapi
-import osmcha.changeset
 
 from time import sleep
 
-import changeset as cha
-import src.parse as pa
+import src.analyse as ana
+import src.changeset as cha
 import src.conf as conf
+from src.chart import gen_changestat_png
 
 
 app = Client(
@@ -31,13 +31,21 @@ def chnl_loop():
     print("Query for changesets...")
     ch_sets = cha.query_changesets(api, iran_bbox, border, conf.interval)
     for ch_st in ch_sets:
-        ch_info = pa.changeset_parse(ch_st)
-        app.send_message(conf.gen_channel, pa.format_nor(ch_info),
-                         parse_mode="md", disable_web_page_preview=True)
-        if ch_info["is_sus"]:
-            app.send_message(conf.sus_channel, pa.format_sus(ch_info),
-                             parse_mode="md", disable_web_page_preview=True)
-        sleep(3) # Avoid telegram api limit
+        try:
+            print(f"Analysing {ch_st}")
+            ch_ana = ana.Analyse(ch_st)
+            gen_changestat_png(ch_ana.ch)
+            ch_info = cha.changeset_parse(ch_ana)
+            app.send_photo(conf.gen_channel, "temp.png",
+                ch_info)
+            if ch_ana.gr >= 3:
+                app.send_photo(conf.sus_channel, "temp.png",
+                               ch_info)
+            sleep(3)  # Avoid telegram api limit
+        except Exception as e:
+            raise(e)
+            print("Something went wrong...")
+            print(e)
 
 
 @app.on_message(filters.command(["check", "c"]))
@@ -49,11 +57,11 @@ def bebin(client, message):
         message.reply_text("Check what?")
         return
 
-    ch_info = pa.changeset_parse(int(text[0]))
-    response = pa.format_sus(ch_info) if ch_info["is_sus"] else pa.format_nor(ch_info)
-
-    message.reply_text(response, parse_mode="md",
-                       disable_web_page_preview=True)
+    print(f"Analysing {text[0]}")
+    ch_ana = ana.Analyse(text[0])
+    gen_changestat_png(ch_ana.ch)
+    ch_info = cha.changeset_parse(ch_ana)
+    message.reply_photo("temp.png", caption=ch_info)
 
 
 @app.on_message(filters.command(["start"]) & filters.private)
