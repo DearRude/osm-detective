@@ -1,15 +1,46 @@
-from os import environ as env
+import toml
 
-country = env["BORDER"]
-interval = int(env["INTERVAL"])
+with open("conf.toml", "r") as f:
+    confs = toml.load(f)
 
-api_id = int(env["API_ID"])
-api_hash = env["API_HASH"]
-bot_token = env["BOT_TOKEN"]
+## App
+country = confs["app"]["border"]
+interval = confs["app"]["fetch_intervals"]
+language = confs["app"]["language"]
 
-gen_channel = env["GEN_CHANNEL"]
-sus_channel = env["SUS_CHANNEL"]
+## Pyrogram
+api_id = confs["pyrogram"]["api_id"]
+api_hash = confs["pyrogram"]["api_hash"]
+bot_token = confs["pyrogram"]["bot_token"]
 
-proxy_host = env.get("PROXY_HOST", None)
-proxy_port = env.get("PROXY_PORT", None)
-proxy_port = int(proxy_port) if proxy_port else proxy_port
+gen_channel = confs["pyrogram"]["telegram_gen_channel"]
+sus_channel = confs["pyrogram"]["telegram_sus_channel"]
+
+proxy_needed = True if confs["pyrogram"].get("proxy") else False
+if proxy_needed:
+    proxy_host = confs["pyrogram"].get("proxy")["host"]
+    proxy_port = confs["pyrogram"].get("proxy")["port"]
+
+## Validator
+common_editors = confs["validator"]["common_editors"]
+comment_sus_words = confs["validator"]["comment_sus_words"]
+source_sus_words = confs["validator"]["source_sus_words"]
+
+important_ids = confs["validator"]["important_ids"]
+important_tags = confs["validator"]["important_tags"]
+important_tags = dict([tag.split("=") for tag in important_tags])
+important_names = confs["validator"]["important_names"]
+
+
+## APIs
+osm_users_api = 'https://www.openstreetmap.org/api/0.6/user/{user_id}'
+osm_changeset_api = "https://www.openstreetmap.org/api/0.6/changeset/{ch_id}"
+osm_changeset_raw_api = "https://www.openstreetmap.org/api/0.6/changeset/{ch_id}/download"
+nominatim_api = "https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
+
+if confs.get("api"):
+    osm_users_api = confs["api"].get(osm_users_api, osm_users_api)
+    osm_changeset_api = confs["api"].get(osm_changeset_api, osm_changeset_api)
+    osm_changeset_raw_api = confs["api"].get(
+        osm_changeset_raw_api, osm_changeset_raw_api)
+    nominatim_api = confs["api"].get(nominatim_api, nominatim_api)
