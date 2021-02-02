@@ -1,15 +1,15 @@
-# OSM Detective
+# OSM Detective [![Build Status](https://travis-ci.com/DearRude/osm-detective.svg?branch=master)](https://travis-ci.com/DearRude/osm-detective)
 
-[![Build Status](https://travis-ci.com/DearRude/osm-detective.svg?branch=master)](https://travis-ci.com/DearRude/osm-detective)
+<div style="align:center">
+  <img src="https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png" />
+</div>
 
-![alt text](https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png "OSMDetective Logo")
-
-Powered by OSMcha, a simple program to monitor suspicious informations in changesets of OpenStreetMap.
+A simple program to monitor suspicious informations in changesets of OpenStreetMap. (Here is [how](https://github.com/DearRude/osm-detective/wiki/Importance-Grade))
 
 
 ## Installation
-1. You can run rom srouce using `poetry`. ([read wiki](https://gitlab.com/OSMIran/osm-detective/-/wikis/Run-from-source))
-2. Also, thanks to Gitlab CI use docker images. ([read wiki](https://gitlab.com/OSMIran/osm-detective/-/wikis/Run-using-docker))
+- You can run rom srouce using `Makefile`. ([read wiki](https://github.com//dearrude/osm-detective/wiki/Installation#from-source))
+- Also, docker images are hosted on Dockerhub and GHCR. ([read wiki](https://github.com//dearrude/osm-detective/wiki/Installation#docker))
 
 
 ## Contribute
@@ -17,13 +17,11 @@ In order to to contribute in this project:
 
 - You can either make an issue and explain how this project can be improved.
 - Edit the code directly and pull request.
+- Add your language or country/state border ([read wiki](https://github.com/DearRude/osm-detective/wiki/Add-language-or-border)).
 
 
-
-## Support this project 💰
+## Support this project
 Consider :star: this repo.
-
-You also can donate to [Iran OSM](https://donate.osmiran.ir/) community.
 
 ## License
 This project is licensed under GNU PUBLIC LICENSE v3.
