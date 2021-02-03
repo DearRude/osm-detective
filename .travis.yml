@@ -21,7 +21,7 @@ stages:
   - name: build
     if: branch = master
   - name: build_tag
-    if: (tag IS present) AND (branch = master)
+    if: on.tags = true
 
 jobs:
   include:
