@@ -8,14 +8,14 @@ A simple program to monitor suspicious informations in changesets of OpenStreetM
 
 
 ## Installation
-- You can run rom srouce using `Makefile`. ([read wiki](https://github.com//dearrude/osm-detective/wiki/Installation#from-source))
+- You can run from source using `Makefile`. ([read wiki](https://github.com//dearrude/osm-detective/wiki/Installation#from-source))
 - Also, docker images are hosted on Dockerhub and GHCR. ([read wiki](https://github.com//dearrude/osm-detective/wiki/Installation#docker))
 
 
 ## Contribute
-In order to to contribute in this project:
+In order to contribute in this project:
 
-- You can either make an issue and explain how this project can be improved.
+- You can either create an issue and explain how this project can be improved.
 - Edit the code directly and pull request.
 - Add your language or country/state border ([read wiki](https://github.com/DearRude/osm-detective/wiki/Add-language-or-border)).
 
