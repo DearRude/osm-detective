@@ -1,11 +1,11 @@
 Changeset `{ch_id}`
 
-❗️Importance grade: {grade}
+❗️ Importance grade: {grade}
 ⚠️ Reasons:
 {flags}
 
 📅 Date and Time: `{date}`
-📍Location: {location}
+📍 Location: {location}
 🧑🏽‍💻 #User_{user_id}: [{username}]({userlink})
 
 📃 Comment: {comment}

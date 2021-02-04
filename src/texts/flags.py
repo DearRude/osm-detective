@@ -1,8 +1,46 @@
+de = {
+    "changeset_count": "Nutzer hat {v} Änderungssätze",
+    "new_account": "Nutzerkonto wurde vor {v} Tagen erstellt",
+    "user_block": "Nutzer wurde bereits {v} Mal blockiert",
+    "big_area": "Das Hochladegebiet dieses Änderungssatzes ist sehr groß",
+    "no_editor": "Editor wurde nicht angegeben",
+    "uncommon_editor": "Nutzer hat {v} als Editor verwendet",
+    "no_comment": "Änderungssatz ohne Kommentar",
+    "sus_word_comment": "Verdächtige Wörter im Kommentar des Änderungssatzes",
+    "no_source": "Keine Quelle für den Änderungssatz angegeben",
+    "sus_word_source": "Verdächtige Wörter in der Quellenangabe des Änderungssatzes",
+    "review_requested": "Nutzer hat um Überprüfung der Bearbeitungen gebeten",
+    "exceed_del_percen": "{v}%% des Änderungssatzes sind gelöschte Objekte",
+    "mass_deletaion": "Sehr viele gelöschte Objekte: {v}",
+    "entity_mass_deletion": "Sehr viele gelöschte Entitäten: {v}",
+    "mass_modification": "Sehr viele bearbeitete Objekte: {v}",
+    "mass_creation": "Sehr viele neu erstellte Objekte: {v}",
+    "building_mass_creation": "Sehr viele gelöschte Gebäude: {v}",
+    "important_id": "Änderungssatz enthält wichtige id: {v}",
+    "important_name": "Änderungssatz enthält wichtigen Namen: {v}",
+    "important_tag": "Änderungssatz enthält wichtige Tags: {v}",
+    "versioned_entity": "Nutzer hat Entität mit Version {v} geändert",
+    # Warnings
+    "almost_junction": "Fast-Kreuzung:{n}={v}",
+    "close_nodes": "Sehr nahe beieinander liegende Knoten:{n}={v}",
+    "crossing_ways": "Überschneidende Wege:{n}={v}",
+    "disconnected_way": "Unverbundene Wege:{n}={v}",
+    "impossible_oneway": "Unmögliche Einbahnstraße:{n}={v}",
+    "incompatible_source": "Nicht kompatible Quelle:{n}={v}",
+    "mismatched_geometry": "Nicht zusammen passende Geometrie:{n}={v}",
+    "missing_role": "Fehlende Rolle:{n}={v}",
+    "missing_tag": "Fehlender Tag:{n}={v}",
+    "outdated_tags": "Veraltete Tags:{n}={v}",
+    "private_data": "Private Informationen:{n}={v}",
+    "suspicious_name": "Generischer Name={v}",
+    "unsquare_way": "Ecke mit beinahe rechtem Winkel:{n}={v}"
+}
+
 en = {
     "changeset_count": "User has {v} changesets",
     "new_account": "User's account had been made {v} days ago",
     "user_block": "User has been blocked {v} times before",
-    "big_area": "Change are is too large",
+    "big_area": "Bounding box of this changeset is very large",
     "no_editor": "Editor has not been specified",
     "uncommon_editor": "User used {v} as editor",
     "no_comment": "Changeset has no comment",
@@ -11,8 +49,8 @@ en = {
     "sus_word_source": "Changeset's source contains suspicious words",
     "review_requested": "User has requested review",
     "exceed_del_percen": "{v}%% of changeset is deletion",
-    "mass_deletaion": "Mass deletation: {v}",
-    "entity_mass_deletion": "Mass entity deletation: {v}",
+    "mass_deletaion": "Mass deletion: {v}",
+    "entity_mass_deletion": "Mass entity deletion: {v}",
     "mass_modification": "Mass modification: {v}",
     "mass_creation": "Mass creation: {v}",
     "building_mass_creation": "Mass building creation: {v}",
@@ -74,5 +112,6 @@ fa = {
     "unsquare_way": "گوشه‌ی نامربعی:{n}={v}"
 }
 
-langs = {"en": en,
+langs = {"de": de,
+         "en": en,
          "fa": fa}
