@@ -1,4 +1,4 @@
-Changeset `{ch_id}`
+Changeset [{ch_id}]({osm_link}) - "{comment}"
 
 ❗️ Importance grade: {grade}
 ⚠️ Reasons:
@@ -7,8 +7,6 @@ Changeset `{ch_id}`
 📅 Date and Time: `{date}`
 📍 Location: {location}
 🧑🏽‍💻 #User_{user_id}: [{username}]({userlink})
-
-📃 Comment: {comment}
 📃 Source: {source}
 
-📎 Related links: [OSM]({osm_link}), [OSMcha]({osmcha_link}), [OSMvis]({osmvis_link}), [Achavi]({achavi_link})
+📎 Related links: [OSMcha]({osmcha_link}), [OSMvis]({osmvis_link}), [Achavi]({achavi_link})
