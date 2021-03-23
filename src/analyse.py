@@ -7,12 +7,15 @@ import requests as req
 from lxml import etree
 
 from src import conf
+from src import prometheus as prom
 
 reqs = req.Session()
 reqs.headers.update({"User-Agent": "osm-detective"})
 
 
+@prom.req_time.time()
 def request(url: str, content_type: str = "xml"):
+    prom.requests.labels(content_type).inc()
     try:
         reque = reqs.get(url)
         reque.raise_for_status()
@@ -22,6 +25,8 @@ def request(url: str, content_type: str = "xml"):
             return reque.json()
     except req.exceptions.HTTPError as e:
         print(e.response.text)
+
+
 class User:
     """OSM user class to be used in analysis"""
     def __init__(self, user_id):
@@ -70,18 +75,45 @@ class Changeset:
         actions = ["create", "modify", "delete"]
         self.count_allchange = [r.xpath(f"count({action})")
             for action in actions]
+        prom.creates.labels("all").inc(self.count_allchange[0])
+        prom.modifies.labels("all").inc(self.count_allchange[1])
+        prom.deletes.labels("all").inc(self.count_allchange[2])
+
         self.count_ref_nodes = [r.xpath(f"count({action}/node[count(tag)=0])")
             for action in actions]
+        prom.creates.labels("ref_node").inc(self.count_ref_nodes[0])
+        prom.modifies.labels("ref_node").inc(self.count_ref_nodes[1])
+        prom.deletes.labels("ref_node").inc(self.count_ref_nodes[2])
+
         self.count_nodes = [r.xpath(f"count({action}/node[count(tag)>0])")
             for action in actions]
+        prom.creates.labels("node").inc(self.count_nodes[0])
+        prom.modifies.labels("node").inc(self.count_nodes[1])
+        prom.deletes.labels("node").inc(self.count_nodes[2])
+
         self.count_ways = [r.xpath(f"count({action}/way)")
             for action in actions]
+        prom.creates.labels("way").inc(self.count_ways[0])
+        prom.modifies.labels("way").inc(self.count_ways[1])
+        prom.deletes.labels("way").inc(self.count_ways[2])
+
         self.count_rels = [r.xpath(f"count({action}/relation)")
             for action in actions]
+        prom.creates.labels("relation").inc(self.count_rels[0])
+        prom.modifies.labels("relation").inc(self.count_rels[1])
+        prom.deletes.labels("relation").inc(self.count_rels[2])
+
         self.count_highway = [r.xpath(f"count({action}/*/tag[@k='highway']/..)")
             for action in actions]
+        prom.creates.labels("highway").inc(self.count_highway[0])
+        prom.modifies.labels("highway").inc(self.count_highway[1])
+        prom.deletes.labels("highway").inc(self.count_highway[2])
+
         self.count_building = [r.xpath(f"count({action}/*/tag[@k='building']/..)")
             for action in actions]
+        prom.creates.labels("building").inc(self.count_building[0])
+        prom.modifies.labels("building").inc(self.count_building[1])
+        prom.deletes.labels("building").inc(self.count_building[2])
 
     def __extract_location(self):
         lat, lon = (self.bbox[0]+self.bbox[2])/2, (self.bbox[1]+self.bbox[3])/2
