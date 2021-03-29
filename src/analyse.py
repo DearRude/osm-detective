@@ -262,7 +262,7 @@ class Analyse:
         deletaion_percentage = all_del / self.ch.change_count
         if deletaion_percentage > max_del_per and all_del > max_del:
             self.gr += percent_gr
-            self.flags["exceed_del_percen"] = 100 * deletaion_percentage
+            self.flags["exceed_del_percen"] = int(100 * deletaion_percentage)
         if all_del > top_thresh:
             self.gr += top_thresh_gr + (all_del - top_thresh // top_thresh)
             self.flags["mass_deletaion"] = all_del
