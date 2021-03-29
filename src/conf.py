@@ -7,6 +7,7 @@ with open("conf.toml", "r") as f:
 country = confs["app"]["border"]
 interval = confs["app"]["fetch_intervals"]
 language = confs["app"]["language"]
+prom_port = confs["app"]["prometheus_port"]
 
 ## Pyrogram
 api_id = confs["pyrogram"]["api_id"]

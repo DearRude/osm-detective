@@ -8,6 +8,7 @@ from time import sleep
 import src.analyse as ana
 import src.changeset as cha
 import src.conf as conf
+from src import prometheus as prom
 from src.chart import gen_changestat_png
 
 
@@ -28,8 +29,11 @@ api = osmapi.OsmApi()
 def chnl_loop():
     """A schedule loop which posts changesets to channels"""
 
+    prom.cycle.inc(1)
     print("Query for changesets...")
     ch_sets = cha.query_changesets(api, iran_bbox, border, conf.interval)
+    prom.changesets.inc(len(ch_sets))
+    prom.changeset_per_cycle.set(len(ch_sets))
     for ch_st in ch_sets:
         try:
             print(f"Analysing {ch_st}")
