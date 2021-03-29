@@ -5,6 +5,7 @@ from datetime import datetime
 
 import requests as req
 from lxml import etree
+import backoff
 
 from src import conf
 from src import prometheus as prom
@@ -13,18 +14,18 @@ reqs = req.Session()
 reqs.headers.update({"User-Agent": "osm-detective"})
 
 
+@backoff.on_exception(backoff.expo,
+                      req.exceptions.RequestException,
+                      max_tries=10)
 @prom.req_time.time()
 def request(url: str, content_type: str = "xml"):
     prom.requests.labels(content_type).inc()
-    try:
-        reque = reqs.get(url)
-        reque.raise_for_status()
-        if content_type == "xml":
-            return etree.XML(reque.content)
-        elif content_type == "json":
-            return reque.json()
-    except req.exceptions.HTTPError as e:
-        print(e.response.text)
+    reque = reqs.get(url)
+    reque.raise_for_status()
+    if content_type == "xml":
+        return etree.XML(reque.content)
+    elif content_type == "json":
+        return reque.json()
 
 
 class User:

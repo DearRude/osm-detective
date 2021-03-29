@@ -7,8 +7,8 @@ import src.conf as conf
 print("Initializing prometheus endpoint")
 start_http_server(conf.prom_port)
 
-# with app:
-#     chnl_loop()
+with app:
+    chnl_loop()
 
 
 scheduler = BackgroundScheduler()
