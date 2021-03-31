@@ -7,17 +7,24 @@ with open("conf.toml", "r") as f:
 country = confs["app"]["border"]
 interval = confs["app"]["fetch_intervals"]
 language = confs["app"]["language"]
-prom_port = confs["app"]["prometheus_port"]
+prom_enabled = True if confs["app"].get("prometheus_port") else False
+if prom_enabled:
+    prom_port = confs["app"]["prometheus_port"]
 
 ## Pyrogram
-api_id = confs["pyrogram"]["api_id"]
-api_hash = confs["pyrogram"]["api_hash"]
-bot_token = confs["pyrogram"]["bot_token"]
+pyrogram_enabled = True if confs.get("pyrogram") else False
+if pyrogram_enabled:
+    api_id = confs["pyrogram"]["api_id"]
+    api_hash = confs["pyrogram"]["api_hash"]
+    bot_token = confs["pyrogram"]["bot_token"]
 
-gen_channel = confs["pyrogram"]["telegram_gen_channel"]
-sus_channel = confs["pyrogram"]["telegram_sus_channel"]
+    gen_channel = confs["pyrogram"]["telegram_gen_channel"]
+    sus_channel = confs["pyrogram"]["telegram_sus_channel"]
+else:
+    api_id, api_hash, bot_token = [None, None, None]
+    gen_channel, sus_channel = [None, None]
 
-proxy_needed = True if confs["pyrogram"].get("proxy") else False
+proxy_needed = True if pyrogram_enabled and confs["pyrogram"].get("proxy") else False
 if proxy_needed:
     proxy_host = confs["pyrogram"].get("proxy")["host"]
     proxy_port = confs["pyrogram"].get("proxy")["port"]

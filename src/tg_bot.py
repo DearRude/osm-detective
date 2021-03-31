@@ -38,13 +38,14 @@ def chnl_loop():
         try:
             print(f"Analysing {ch_st}")
             ch_ana = ana.Analyse(ch_st)
-            gen_changestat_png(ch_ana.ch)
-            ch_info = cha.changeset_parse(ch_ana)
-            app.send_photo(conf.gen_channel, "temp.png",
-                ch_info)
-            if ch_ana.gr >= 3:
-                app.send_photo(conf.sus_channel, "temp.png",
-                               ch_info)
+            if conf.pyrogram_enabled:
+                gen_changestat_png(ch_ana.ch)
+                ch_info = cha.changeset_parse(ch_ana)
+                app.send_photo(conf.gen_channel, "temp.png",
+                    ch_info)
+                if ch_ana.gr >= 3:
+                    app.send_photo(conf.sus_channel, "temp.png",
+                                ch_info)
             sleep(3)  # Avoid telegram api limit
         except Exception as e:
             raise(e)
