@@ -1,0 +1,52 @@
+[pyrogram]
+api_id = 21123
+api_hash = "somel11tstring"
+bot_token = "12312312:somemorestringsomemorestring"
+telegram_gen_channel = "@example_channel"
+telegram_sus_channel = "@susexample_channel"
+
+[app]
+fetch_intervals = 10 # in minutes
+border = "iran"
+language = "fa"
+
+[validator]
+common_editors = [
+    "iD",
+    "JOSM",
+    "Potlatch",
+    "Vespucci",
+    "StreetComplete"
+]
+comment_sus_words = [
+    "wipe",
+    "delete all"
+]
+source_sus_words = [
+    "Google",
+    "google maps"
+]
+important_ids = [
+    8378076428
+]
+important_tags = [
+    "admin_level=2",
+    "admin_level=4",
+    "admin_level=5",
+    "highway=motorway",
+    "place=city"
+]
+important_names = [
+    "دهق"
+]
+
+## Optionals
+# [pyrogram.proxy] # SOCKS5
+# host = "127.0.0.1"
+# port = 1080
+
+# [api]
+# osm_users_api = ""
+# osm_changeset_api = ""
+# osm_changeset_raw_api = ""
+# nominatim_api = ""

@@ -1,0 +1,35 @@
+[app]
+fetch_intervals = 5 # in minutes
+border = "iran"
+language = "fa"
+prometheus_port = 8000
+
+[validator]
+common_editors = [
+    "iD",
+    "JOSM",
+    "Potlatch",
+    "Vespucci",
+    "StreetComplete"
+]
+comment_sus_words = [
+    "wipe",
+    "delete all"
+]
+source_sus_words = [
+    "Google",
+    "google maps"
+]
+important_ids = [
+    8378076428
+]
+important_tags = [
+    "admin_level=2",
+    "admin_level=4",
+    "admin_level=5",
+    "highway=motorway",
+    "place=city"
+]
+important_names = [
+    "دهق"
+]

@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  osm-detective:
+    image: dearrude/osm-detective:latest
+    restart: always
+    volumes:
+      - ./config.toml:/usr/osm-detective/conf.toml

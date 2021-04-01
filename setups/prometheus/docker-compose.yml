@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  osm-detective:
+    image: dearrude/osm-detective:latest
+    restart: always
+    volumes:
+      - ./config.toml:/usr/osm-detective/conf.toml
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    user: "$UID:$GID"
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=badanavazkon
+      - GF_USERS_ALLOW_SIGN_UP=false
