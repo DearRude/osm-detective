@@ -1,4 +1,4 @@
-# OSM Detective [![Build Status](https://travis-ci.com/DearRude/osm-detective.svg?branch=master)](https://travis-ci.com/DearRude/osm-detective)
+# OSM Detective ![Build Status](https://github.com/dearrude/osm-detective/actions/workflows/docker.yml/badge.svg)
 
 <div style="align:center">
   <img src="https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png" />
