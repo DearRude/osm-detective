@@ -2,6 +2,7 @@
 
 <div style="align:center">
   <img src="https://assets.gitlab-static.net/uploads/-/system/project/avatar/21122891/osm_dec2.png" />
+  <img src="https://i.imgur.com/uBmowBX.png" />
 </div>
 
 A simple program to monitor suspicious informations in changesets of OpenStreetMap. (Here is [how](https://github.com/DearRude/osm-detective/wiki/Importance-Grade))
